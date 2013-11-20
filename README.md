@@ -1,4 +1,6 @@
 frostbite-wire
 ==============
 
-Wire protocol for Frostbite engine games(currently targeting Battlefield 4)
+Wire protocol for Frostbite engine games, represented in Python
+
+Currently targeting Battlefield 4
