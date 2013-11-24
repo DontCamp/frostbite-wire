@@ -36,19 +36,19 @@ listplayers = response.words
 
 sock.close()
 
-# Print out pretty server name/players
-curated_serverinfo = serverinfo[1], serverinfo[2], serverinfo[3]
+# Need both of these to go on
 assert serverinfo[0] == 'OK'
+assert listplayers[0] == 'OK'
+
+# Print out pretty server name/players
+curated_serverinfo = (serverinfo[1], serverinfo[2], serverinfo[3])
 print '%s (%s/%s)' % curated_serverinfo
 
-# Chomp on the listplayers output and ghetto loop out some namedtuples
-ok, the_rest = listplayers[0], listplayers[1:]
-assert ok == 'OK'
-num_fields, the_rest = int(the_rest[0]), the_rest[1:]
-fields, the_rest = the_rest[:num_fields], the_rest[num_fields:]
-num_players, the_rest = the_rest[0], the_rest[1:]
+# Chomp on the listplayers output and loop out some namedtuples
+num_fields, the_rest = int(listplayers[1]), listplayers[2:]
+fields, num_players, players = the_rest[:num_fields], the_rest[num_fields], the_rest[num_fields+1:]
 
 Player = namedtuple('Player', fields)
-while the_rest:
-    print Player(*the_rest[:num_fields])
-    the_rest = the_rest[num_fields:]
+while players:
+    print Player(*players[:num_fields])
+    players = players[num_fields:]
