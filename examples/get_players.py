@@ -66,6 +66,22 @@ fields, num_players, players = (
 )
 
 Player = namedtuple('Player', fields)
+
+player_list = list()
 while players:
-    print Player(*players[:num_fields])
+    player_list.append(Player(*players[:num_fields]))
     players = players[num_fields:]
+
+team_1 = filter(lambda player: player.teamId == '1', player_list)
+team_2 = filter(lambda player: player.teamId == '2', player_list)
+
+print 'Team 1:'
+print '======='
+for player in sorted(team_1, key=lambda player: int(player.score), reverse=True):
+    print player
+
+print 'Team 2:'
+print '======='
+for player in sorted(team_2, key=lambda player: int(player.score), reverse=True):
+    print player
+
