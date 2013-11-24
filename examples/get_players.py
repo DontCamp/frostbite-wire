@@ -8,6 +8,18 @@ from collections import namedtuple
 
 from frostbite_wire.utils import Packet
 
+
+def recv(sock):
+    # Pull enough to get the int headers and instantiate a Packet
+    out = sock.recv(12)
+    p = Packet.from_buffer(out)
+    packet_size = len(p)
+    # Pull one character at a time until we've recv'd
+    # up to the reported size
+    while len(out) < packet_size:
+        out += sock.recv(1)
+    return out
+
 try:
     address = sys.argv[1]
 except:
@@ -26,12 +38,13 @@ sock.connect(server)
 
 serverinfo = Packet(1, False, True, 'serverinfo')
 sock.sendall(serverinfo.to_buffer())
-response = Packet.from_buffer(sock.recv(16384))
+
+response = Packet.from_buffer(recv(sock))
 serverinfo = response.words
 
 listplayers = Packet(2, False, True, 'listPlayers all')
 sock.sendall(listplayers.to_buffer())
-response = Packet.from_buffer(sock.recv(16384))
+response = Packet.from_buffer(recv(sock))
 listplayers = response.words
 
 sock.close()
@@ -46,7 +59,11 @@ print '%s (%s/%s)' % curated_serverinfo
 
 # Chomp on the listplayers output and loop out some namedtuples
 num_fields, the_rest = int(listplayers[1]), listplayers[2:]
-fields, num_players, players = the_rest[:num_fields], the_rest[num_fields], the_rest[num_fields+1:]
+fields, num_players, players = (
+    the_rest[:num_fields],
+    the_rest[num_fields],
+    the_rest[num_fields + 1:]
+)
 
 Player = namedtuple('Player', fields)
 while players:

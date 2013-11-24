@@ -78,16 +78,20 @@ class Packet(object):
     @property
     def words(self):
         words = list()
-        words_buf = self._buffer[12:]
-
-        seen_words = 0
-        while seen_words < self.num_words:
-            word_len = int(unpack_from('I', words_buf)[0])
-            word = unpack_from('%ds' % word_len, words_buf, 4)[0]
+        seen_words, num_words = 0, self.num_words
+        # Start the word pointer after the int32 flags (byte 12),
+        # and advance the pointer as appropriate for each step
+        word_pointer = 12
+        while seen_words < num_words:
+            word_len = int(unpack_from('I', self._buffer, word_pointer)[0])
+            word_pointer += 4
+            word = unpack_from('%ds' % word_len, self._buffer, word_pointer)[0]
+            word_pointer += word_len
+            # TODO: AssertionError here should be replaced with a more
+            # specific exception class
+            assert unpack_from('s', self._buffer, word_pointer)[0] == '\x00'
+            word_pointer += 1
             words.append(word)
-            # Strip the word_len, word, and trailing null from the words_buf
-            new_index = 4 + word_len + 1
-            words_buf = words_buf[new_index:]
             seen_words += 1
 
         return words
