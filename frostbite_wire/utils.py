@@ -18,11 +18,11 @@ class Packet(object):
         # create an uninitialized instance with _new_ and inject the
         # passed-in buffer
         instance = cls.__new__(cls)
-        instance._buffer = bytearray(buf, 'utf8')
+        instance._buffer = buf
         return instance
 
     def to_buffer(self):
-        return self._buffer.decode('unicode_escape')
+        return self._buffer
 
     def __len__(self):
         return self._size
@@ -90,7 +90,7 @@ class Packet(object):
             words_buf = words_buf[new_index:]
             seen_words += 1
 
-        return ' '.join(words)
+        return words
 
     @words.setter
     def words(self, words):

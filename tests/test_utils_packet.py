@@ -14,7 +14,7 @@ this\x00\x02\x00\x00\x00is\x00\x01\x00\x00\x00a\x00\x04\x00\x00\x00test\x00'
 
 def test_packet_word_gettersetters():
     p = Packet(**packet_attrs)
-    assert p.words == packet_attrs['words']
+    assert p.words == packet_attrs['words'].split()
     assert p.num_words == len(packet_attrs['words'].split())
 
     p.words = ''
@@ -22,7 +22,7 @@ def test_packet_word_gettersetters():
     assert p.num_words == 0
 
     p.words = packet_attrs['words']
-    assert p.words == packet_attrs['words']
+    assert p.words == packet_attrs['words'].split()
 
 
 def test_packet_sequence_field_gettersetters():
@@ -57,7 +57,7 @@ def test_packet_len():
 
 def test_packet_bits():
     p = Packet(**packet_attrs)
-    assert p.to_buffer() == known_good_packet
+    assert p.to_buffer() == bytearray(known_good_packet, 'ascii')
 
 
 def test_packet_coversions():
