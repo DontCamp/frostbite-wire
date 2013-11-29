@@ -1,4 +1,4 @@
-from frostbite_wire.utils import Packet
+from frostbite_wire.packet import Packet
 from unittest import TestCase
 
 packet_attrs = {
@@ -26,7 +26,6 @@ class TestPacket(TestCase):
         p.words = packet_attrs['words']
         assert p.words == packet_attrs['words'].split()
 
-
     def test_packet_sequence_field_gettersetters(self):
         p = Packet(**packet_attrs)
         assert p.sequence_number == 100
@@ -48,7 +47,6 @@ class TestPacket(TestCase):
         assert p.is_response is False
         assert p.is_client is True
 
-
     def test_packet_len(self):
         # This test also implicitly tests the _size getter and setter
         p = Packet(**packet_attrs)
@@ -56,11 +54,9 @@ class TestPacket(TestCase):
         # the given packet_attrs
         assert len(p) == len(known_good_packet)
 
-
     def test_packet_bits(self):
         p = Packet(**packet_attrs)
         assert p.to_buffer() == bytearray(known_good_packet, 'ascii')
-
 
     def test_packet_coversions(self):
         p = Packet(**packet_attrs)
