@@ -6,7 +6,7 @@ import socket
 import sys
 from collections import namedtuple
 
-from frostbite_wire.utils import Packet
+from frostbite_wire.packet import Packet
 
 
 def recv(sock):
