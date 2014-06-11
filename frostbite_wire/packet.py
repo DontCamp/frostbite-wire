@@ -6,7 +6,7 @@ class Packet(object):
     # to simplify altering the state later
     _buffer = bytearray(pack('12s', '\x00' * 12))
 
-    def __init__(self, sequence_number, is_response, is_client, words=''):
+    def __init__(self, sequence_number, is_response=False, is_client=True, words=''):
         self.sequence_number = sequence_number
         self.is_response = is_response
         self.is_client = is_client
@@ -62,6 +62,11 @@ class Packet(object):
     @is_client.setter
     def is_client(self, is_client):
         self._set_bit(is_client, 31)
+
+    @property
+    def size(self):
+        # Public getter for size, but no public setter
+        return self._size
 
     @property
     def _size(self):
