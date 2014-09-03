@@ -29,7 +29,7 @@ class Packet(object):
 
     @property
     def _sequence(self):
-        return int(unpack_from('I', self._buffer, 0)[0])
+        return int(unpack_from('I', buffer(self._buffer), 0)[0])
 
     @_sequence.setter
     def _sequence(self, seq_num_with_flags):
